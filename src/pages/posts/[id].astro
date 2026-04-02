@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { SITE_CONFIG } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+// Dynamic image import helper
+const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/vault-media/*.{jpeg,jpg,png,gif}');
+const heroImagePath = post.data.heroImage ? `../../assets/vault-media/${post.data.heroImage}` : null;
+const heroImage = heroImagePath ? images[heroImagePath] : null;
+---
+
+<BaseLayout title={`${post.data.title} | ${SITE_CONFIG.name}`} description={post.data.summary}>
+  <article class="py-20 md:py-32 bg-accent min-h-screen">
+    <div class="max-w-3xl mx-auto px-4">
+      <a href="/resources" class="text-primary font-montserrat font-medium hover:text-secondary transition-colors mb-12 inline-flex items-center group">
+        <span class="mr-2 group-hover:-translate-x-1 transition-transform">&larr;</span> Back to Resources
+      </a>
+      
+      {heroImage && (
+        <div class="mb-12 rounded-3xl overflow-hidden shadow-lg">
+          <Image 
+            src={heroImage()} 
+            alt={post.data.title} 
+            class="w-full h-auto"
+          />
+        </div>
+      )}
+
+      <h1 class="text-4xl md:text-5xl font-montserrat font-bold text-secondary mb-8">
+        {post.data.title}
+      </h1>
+      
+      <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
+        <Content />
+      </div>
+
+      <div class="mt-24 pt-12 border-t border-primary/20 text-center">
+        <h3 class="text-2xl font-montserrat font-semibold text-secondary mb-6">Continue the Conversation</h3>
+        <a href="/#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all shadow-md">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const services = await getCollection('services');
+const sortedServices = services.sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
+---
+
+<BaseLayout title="Services | Jamila M. Brown, PsyD" description="Explore the therapeutic services and areas of focus offered by Dr. Jamila M. Brown.">
+  <div class="bg-primary/20 py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-montserrat font-bold text-secondary mb-6">
+        Therapeutic Services
+      </h1>
+      <p class="text-xl text-text/80 font-inter max-w-2xl mx-auto">
+        Dedicated support tailored to your unique journey and challenges.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-20 bg-accent">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {sortedServices.map((service) => (
+          <div class="bg-white/50 p-8 md:p-10 rounded-2xl shadow-sm border border-primary/20 flex flex-col h-full">
+            <h2 class="text-2xl font-montserrat font-semibold text-secondary mb-4">{service.data.title}</h2>
+            <p class="font-inter text-text/80 mb-8 flex-grow">
+              {service.data.description}
+            </p>
+            <a href={`/services/${service.id}`} class="inline-block bg-primary/20 text-secondary px-6 py-3 rounded-full font-montserrat font-medium hover:bg-primary hover:text-text transition-colors self-start">
+              Learn More
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-secondary text-accent text-center">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl font-montserrat font-semibold mb-6">Unsure where to start?</h2>
+      <p class="font-inter text-accent/80 text-xl mb-10">
+        Finding the right therapeutic fit is important. Let's discuss your needs in a brief consultation.
+      </p>
+      <a href="/contact" class="inline-block bg-primary text-text px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-colors shadow-lg">
+        Request a Consultation
+      </a>
+    </div>
+  </section>
+</BaseLayout>

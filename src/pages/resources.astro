@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).valueOf() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).valueOf() : 0;
+  return dateB - dateA;
+});
+---
+
+<BaseLayout title="Resources | Jamila M. Brown, PsyD" description="Insights, articles, and thoughts for your healing journey.">
+  <div class="bg-primary/20 py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-montserrat font-bold text-secondary mb-6">
+        Resources
+      </h1>
+      <p class="text-xl text-text/80 font-inter max-w-2xl mx-auto">
+        Insights, articles, and resources to support your mental health journey.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-20 bg-accent min-h-screen">
+    <div class="max-w-6xl mx-auto px-4">
+      
+      <!-- Blog Section -->
+      <div class="mb-24">
+        <h2 class="text-3xl font-montserrat font-semibold text-secondary mb-10 border-b border-primary/20 pb-4">Articles & Insights</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedPosts.map((post) => (
+            <div class="bg-white/50 p-8 rounded-2xl shadow-sm border border-primary/20 flex flex-col h-full hover:shadow-md transition-shadow">
+              <h3 class="text-xl font-montserrat font-semibold text-secondary mb-4">{post.data.title}</h3>
+              <p class="font-inter text-text/80 mb-8 flex-grow">
+                {post.data.summary || post.data.description || "Read more about this topic..."}
+              </p>
+              <a href={`/posts/${post.id}`} class="text-primary font-montserrat font-medium hover:text-secondary transition-colors inline-flex items-center self-start">
+                Read Article &rarr;
+              </a>
+            </div>
+          ))}
+          {sortedPosts.length === 0 && (
+            <p class="text-text/70 font-inter italic col-span-full py-12 text-center bg-primary/5 rounded-2xl border border-dashed border-primary/20">
+              No articles found in the collection. Please verify content sync.
+            </p>
+          )}
+        </div>
+      </div>
+
+      <!-- Recommended Books Section -->
+      <div>
+        <h2 class="text-3xl font-montserrat font-semibold text-secondary mb-10 border-b border-primary/20 pb-4">Recommended Reading</h2>
+        <div class="bg-primary/5 p-12 rounded-2xl border border-dashed border-primary/30 text-center">
+           <p class="text-text/60 font-inter italic">Book recommendations coming soon.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>

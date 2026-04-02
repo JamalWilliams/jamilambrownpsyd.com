@@ -1,0 +1,41 @@
+---
+import { SITE_CONFIG } from '../config';
+
+const links = SITE_CONFIG.navLinks;
+const socials = SITE_CONFIG.socials;
+---
+
+<header class="bg-accent/80 backdrop-blur-md sticky top-0 z-50 border-b border-primary/20">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="/" class="text-xl md:text-2xl font-montserrat font-semibold text-secondary hover:text-primary transition-colors whitespace-nowrap">
+      {SITE_CONFIG.name}
+    </a>
+    <div class="hidden lg:flex items-center gap-8">
+      <nav class="flex gap-6">
+        {links.map((link) => (
+          <a href={link.href} class="text-text hover:text-secondary font-inter font-medium transition-colors text-sm uppercase tracking-wider">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <div class="h-6 w-px bg-primary/20"></div>
+      <div class="flex gap-4">
+        {socials.filter(s => s.shortLabel).map((social) => (
+          <a href={social.href} target="_blank" rel="noopener noreferrer" class="text-secondary/60 hover:text-secondary transition-colors text-xs font-montserrat font-bold border border-secondary/20 px-2 py-1 rounded hover:bg-secondary/5" title={social.label}>
+            {social.shortLabel}
+          </a>
+        ))}
+      </div>
+      <a href="/#contact" class="bg-secondary text-accent px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-primary hover:text-text transition-all shadow-sm text-sm">
+        Let's Talk
+      </a>
+    </div>
+    
+    <!-- Mobile Menu Button (Simplified for now) -->
+    <button class="lg:hidden text-secondary p-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+  </div>
+</header>

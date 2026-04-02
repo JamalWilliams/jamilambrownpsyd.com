@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { SITE_CONFIG } from '../config';
+
+// Import local images from assets (symlinked from vault)
+import headshot from '../assets/vault-media/new-headshot.jpg';
+import forestImg from '../assets/vault-media/autumn-forest-sunlight-seattle-psychologist-therapy.jpg';
+import teletherapyImg from '../assets/vault-media/teletherapy-seattle-psychologist-teens-adults.jpg';
+
+// Dynamic image import helper for service cards
+const serviceImages = import.meta.glob<{ default: ImageMetadata }>('../assets/vault-media/*.{jpeg,jpg,png,gif}');
+
+// Manual Mapping (since heroImage is not in frontmatter yet)
+const getServiceImage = (id: string) => {
+  const mapping: Record<string, string> = {
+    'expat-uncertainty': '../assets/vault-media/teen-adult-contemplation-therapy-seattle-sunset.jpg',
+    'individual-therapy': '../assets/vault-media/pensive-teen-girl-therapy-seattle-mental-health.jpg',
+    'teen-transitions': '../assets/vault-media/teen-boy-sitting-on-stairs-mental-health-therapy.jpg',
+    'couples-counseling': '../assets/vault-media/teen-therapy-seattle-psychologist-emotional-support.jpg',
+    'parenting-support': '../assets/vault-media/family-shadow-connection-therapy-seattle-psychologist.jpg',
+    'online-supervision': '../assets/vault-media/teletherapy-seattle-psychologist-teens-adults.jpg',
+  };
+  const path = mapping[id];
+  return path ? serviceImages[path] : null;
+};
+
+// Fetch Content
+const services = await getCollection('services');
+const sortedServices = services.sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
+
+const aboutPage = await getEntry('pages', 'about');
+const gettingStartedPage = await getEntry('pages', 'getting-started');
+const contactPage = await getEntry('pages', 'contact');
+
+const { Content: AboutContent } = aboutPage ? await render(aboutPage) : { Content: null };
+const { Content: GettingStartedContent } = gettingStartedPage ? await render(gettingStartedPage) : { Content: null };
+const { Content: ContactContent } = contactPage ? await render(contactPage) : { Content: null };
+---
+
+<BaseLayout title={`${SITE_CONFIG.name} | ${SITE_CONFIG.title}`}>
+  <!-- Hero Section -->
+  <section id="home" class="relative bg-primary/5 py-24 md:py-48 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <Image 
+        src={forestImg} 
+        alt="Autumn forest sunlight" 
+        class="w-full h-full object-cover opacity-50"
+      />
+    </div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+      <h1 class="text-4xl md:text-7xl font-montserrat font-bold text-secondary mb-6 leading-tight">
+        A Safe Space for Your Healing Journey
+      </h1>
+      <p class="text-xl md:text-2xl text-text/80 font-inter mb-10 max-w-2xl mx-auto">
+        Compassionate, evidence-based therapy to help you navigate life's transitions, heal from trauma, and find your center.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-all shadow-md">
+          Request a Consultation
+        </a>
+        <a href="#services" class="inline-block bg-primary/20 text-secondary border border-secondary/20 px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-primary/30 transition-all">
+          Explore Services
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-24 bg-primary/5">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-montserrat font-semibold text-secondary mb-4">Areas of Focus</h2>
+        <p class="font-inter text-text/70 max-w-2xl mx-auto text-lg">
+          Dedicated therapeutic support for a wide range of needs.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedServices.map((service) => {
+          const serviceImage = getServiceImage(service.id);
+          return (
+            <div class="bg-accent rounded-3xl overflow-hidden shadow-sm border border-primary/20 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col">
+              {serviceImage && (
+                <div class="h-48 overflow-hidden">
+                  <Image 
+                    src={serviceImage()} 
+                    alt={service.data.title} 
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              )}
+              <div class="p-8 flex flex-col flex-grow">
+                <h3 class="text-xl font-montserrat font-semibold text-secondary mb-3 group-hover:text-primary transition-colors">{service.data.title}</h3>
+                <p class="font-inter text-text/80 mb-6 leading-relaxed flex-grow">
+                  {service.data.description}
+                </p>
+                <a href={`/services/${service.id}`} class="text-primary font-montserrat font-medium hover:text-secondary transition-colors inline-flex items-center mt-auto">
+                  Learn More <span class="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bio / About Section -->
+  <section id="about" class="py-24 bg-accent">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+      <div class="md:w-5/12">
+        <div class="relative">
+          <div class="absolute -inset-4 bg-primary/20 rounded-3xl -rotate-3 z-0"></div>
+          <Image 
+            src={headshot} 
+            alt={`Dr. ${SITE_CONFIG.name}`} 
+            class="w-full h-auto rounded-3xl relative z-10 shadow-lg"
+          />
+        </div>
+      </div>
+      <div class="md:w-7/12">
+        <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
+          {AboutContent && <AboutContent />}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting Started Section -->
+  <section id="getting-started" class="py-24 bg-primary/10">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row-reverse items-center gap-16">
+        <div class="md:w-5/12">
+          <Image 
+            src={teletherapyImg} 
+            alt="Teletherapy session" 
+            class="w-full h-auto rounded-3xl shadow-lg"
+          />
+        </div>
+        <div class="md:w-7/12">
+          <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
+            {GettingStartedContent && <GettingStartedContent />}
+          </div>
+          <div class="mt-10">
+            <a href="#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all">
+              Schedule Your Consultation
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Intake Section -->
+  <section id="contact" class="py-24 bg-accent">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <div>
+        <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
+          {ContactContent && <ContactContent />}
+        </div>
+      </div>
+      
+      <div class="bg-white/50 p-8 md:p-12 rounded-3xl shadow-sm border border-primary/20">
+        <h2 class="text-2xl font-montserrat font-semibold text-secondary mb-8">Consultation Request</h2>
+        
+        <form class="space-y-6 font-inter" action={`https://formspree.io/f/${SITE_CONFIG.formspreeId}`} method="POST">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label for="firstName" class="block text-sm font-medium text-text/80">First Name</label>
+              <input type="text" id="firstName" name="firstName" required class="w-full px-4 py-3 rounded-lg border border-primary/30 bg-transparent focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label for="lastName" class="block text-sm font-medium text-text/80">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required class="w-full px-4 py-3 rounded-lg border border-primary/30 bg-transparent focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all" />
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="email" class="block text-sm font-medium text-text/80">Email Address</label>
+            <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-primary/30 bg-transparent focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all" />
+          </div>
+
+          <div class="space-y-2">
+            <label for="serviceInterest" class="block text-sm font-medium text-text/80">Primary Area of Interest</label>
+            <select id="serviceInterest" name="serviceInterest" class="w-full px-4 py-3 rounded-lg border border-primary/30 bg-transparent focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all appearance-none">
+              <option value="" disabled selected>Please select an option...</option>
+              {sortedServices.map(service => (
+                <option value={service.id}>{service.data.title}</option>
+              ))}
+              <option value="other">Other / Not Sure</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label for="message" class="block text-sm font-medium text-text/80">How can I help?</label>
+            <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-primary/30 bg-transparent focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all resize-none"></textarea>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full bg-secondary text-accent py-4 rounded-lg font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-colors shadow-sm">
+              Send Message
+            </button>
+            <p class="text-xs text-text/60 text-center mt-4 font-inter italic leading-relaxed">
+              Please note: This form is for scheduling inquiries only. Do not include sensitive clinical information. For emergencies, please call 911 or visit your nearest emergency room.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

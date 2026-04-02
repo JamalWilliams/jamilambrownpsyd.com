@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-primary: #B2C2B2;
+  --color-secondary: #4A5D6A;
+  --color-accent: #F5F5DC;
+  --color-text: #333333;
+  --font-inter: "Inter", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
+}

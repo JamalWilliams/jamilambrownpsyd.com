@@ -1,0 +1,52 @@
+---
+import { SITE_CONFIG } from '../config';
+
+const currentYear = new Date().getFullYear();
+const socials = SITE_CONFIG.socials;
+---
+
+<footer class="bg-secondary text-accent py-12 mt-24">
+  <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
+    <div>
+      <h3 class="font-montserrat font-semibold text-xl mb-4">{SITE_CONFIG.name}</h3>
+      <p class="font-inter text-accent/80 leading-relaxed mb-6">
+        Clinical Psychologist providing a warm, safe space for healing and growth in {SITE_CONFIG.address}.
+      </p>
+      <div class="flex flex-col gap-2">
+        {socials.map((social) => (
+          <a href={social.href} target="_blank" rel="noopener noreferrer" class="text-primary hover:text-accent font-montserrat text-sm transition-colors flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            {social.label}
+          </a>
+        ))}
+      </div>
+    </div>
+    <div>
+      <h4 class="font-montserrat font-semibold mb-4 text-primary">Quick Links</h4>
+      <ul class="space-y-2 font-inter text-accent/80">
+        {SITE_CONFIG.navLinks.map((link) => (
+          <li><a href={link.href} class="hover:text-primary transition-colors">{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-montserrat font-semibold mb-4 text-primary">Connect</h4>
+      <p class="font-inter text-accent/80 mb-4">
+        Ready to start? Request a consultation to see if we're a good fit.
+      </p>
+      <a href="/#contact" class="inline-block bg-primary text-text px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-accent transition-all">
+        Contact Me
+      </a>
+      <div class="mt-6 font-inter text-accent/60 text-sm">
+        <p>Email: {SITE_CONFIG.email}</p>
+        <p>Phone: {SITE_CONFIG.phone}</p>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-accent/10 text-center font-inter text-sm text-accent/40">
+    <p>&copy; {currentYear} {SITE_CONFIG.name}. All rights reserved.</p>
+    <p class="mt-2">{SITE_CONFIG.license}</p>
+  </div>
+</footer>
