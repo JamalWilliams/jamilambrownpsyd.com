@@ -24,6 +24,24 @@ const pages = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string().optional(),
+    heroHeadline: z.string().optional(),
+    heroSubheadline: z.string().optional(),
+    heroImage: z.string().optional(),
+    teletherapyImage: z.string().optional(),
+    headshotImage: z.string().optional(),
+    // Settings fields
+    name: z.string().optional(),
+    professionalTitle: z.string().optional(),
+    email: z.string().optional(),
+    phone: z.string().optional(),
+    license: z.string().optional(),
+    address: z.string().optional(),
+    formspreeId: z.string().optional(),
+    socials: z.array(z.object({
+      label: z.string(),
+      href: z.string(),
+      shortLabel: z.string(),
+    })).optional(),
 	}),
 });
 

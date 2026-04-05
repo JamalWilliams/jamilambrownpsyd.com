@@ -49,3 +49,17 @@
 4. [x] Define Content Layer schemas in `src/content.config.ts` (Mirroring `jamalwilliams.com` but adding `services`).
 5. [x] Build the "Warm Minimalist" UI components using Tailwind (as per prototype pattern).
 6. [x] Migrate copy and images from the existing site.
+7. [ ] **Form Wiring:** Update `src/pages/index.astro` with a valid Formspree ID or enable Netlify Forms (`data-netlify="true"`).
+8. [ ] **Frontmatter Enrichment:** Add `heroImage` and `order` fields to the markdown files in the vault to replace manual mapping in `index.astro`.
+9. [ ] **Content Migration:** Continue moving existing blog posts into the vault's `posts/` directory.
+10. [ ] **Mobile Navigation:** Finalize mobile menu toggle logic in `Header.astro`.
+7. [x] Create 3 initial SEO blog posts for the Resources section.
+8. [x] Refactor site-wide metadata into `src/config.ts`.
+9. [x] Set up GitHub Actions and Cloudflare Pages deployment.
+
+## ⏭️ Next Steps
+- [ ] 🟢 **Formspree Setup**: Update `formspreeId` in `src/config.ts` with the actual account ID.
+- [ ] 🟢 **DNS Mapping**: Connect `jamilambrownpsyd.com` to the Cloudflare Pages project.
+- [ ] **Recommended Reading**: Populate the `books` collection in the vault.
+- [ ] **Geographic SEO**: Refine keywords for Washington State/Seattle.
+

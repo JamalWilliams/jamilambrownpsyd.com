@@ -1,14 +1,17 @@
 ---
 import { SITE_CONFIG } from '../config';
+import RequestAppointment from './RequestAppointment.astro';
 
+const { settings } = Astro.props;
 const links = SITE_CONFIG.navLinks;
-const socials = SITE_CONFIG.socials;
+const socials = settings?.socials || SITE_CONFIG.socials;
+const name = settings?.name || SITE_CONFIG.name;
 ---
 
 <header class="bg-accent/80 backdrop-blur-md sticky top-0 z-50 border-b border-primary/20">
   <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
     <a href="/" class="text-xl md:text-2xl font-montserrat font-semibold text-secondary hover:text-primary transition-colors whitespace-nowrap">
-      {SITE_CONFIG.name}
+      {name}
     </a>
     <div class="hidden lg:flex items-center gap-8">
       <nav class="flex gap-6">
@@ -26,9 +29,9 @@ const socials = SITE_CONFIG.socials;
           </a>
         ))}
       </div>
-      <a href="/#contact" class="bg-secondary text-accent px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-primary hover:text-text transition-all shadow-sm text-sm">
+      <RequestAppointment class="bg-secondary text-accent px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-primary hover:text-text transition-all shadow-sm text-sm">
         Let's Talk
-      </a>
+      </RequestAppointment>
     </div>
     
     <!-- Mobile Menu Button (Simplified for now) -->

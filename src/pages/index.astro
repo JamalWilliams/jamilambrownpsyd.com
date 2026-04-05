@@ -3,33 +3,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { SITE_CONFIG } from '../config';
+import RequestAppointment from '../components/RequestAppointment.astro';
 
-// Import local images from assets (symlinked from vault)
-import headshot from '../assets/vault-media/new-headshot.jpg';
-import forestImg from '../assets/vault-media/autumn-forest-sunlight-seattle-psychologist-therapy.jpg';
-import teletherapyImg from '../assets/vault-media/teletherapy-seattle-psychologist-teens-adults.jpg';
+// Import all images from assets (symlinked from vault)
+const vaultImages = import.meta.glob<{ default: ImageMetadata }>('../assets/vault-media/*.{jpeg,jpg,png,gif}');
 
-// Dynamic image import helper for service cards
-const serviceImages = import.meta.glob<{ default: ImageMetadata }>('../assets/vault-media/*.{jpeg,jpg,png,gif}');
-
-// Manual Mapping (since heroImage is not in frontmatter yet)
-const getServiceImage = (id: string) => {
-  const mapping: Record<string, string> = {
-    'expat-uncertainty': '../assets/vault-media/teen-adult-contemplation-therapy-seattle-sunset.jpg',
-    'individual-therapy': '../assets/vault-media/pensive-teen-girl-therapy-seattle-mental-health.jpg',
-    'teen-transitions': '../assets/vault-media/teen-boy-sitting-on-stairs-mental-health-therapy.jpg',
-    'couples-counseling': '../assets/vault-media/teen-therapy-seattle-psychologist-emotional-support.jpg',
-    'parenting-support': '../assets/vault-media/family-shadow-connection-therapy-seattle-psychologist.jpg',
-    'online-supervision': '../assets/vault-media/teletherapy-seattle-psychologist-teens-adults.jpg',
-  };
-  const path = mapping[id];
-  return path ? serviceImages[path] : null;
+// Helper to resolve vault image paths from frontmatter strings
+const resolveVaultImage = (imagePath: string | undefined) => {
+  if (!imagePath) return null;
+  // Convert "../media/filename.jpg" to "../assets/vault-media/filename.jpg"
+  const fileName = imagePath.split('/').pop();
+  const assetPath = `../assets/vault-media/${fileName}`;
+  return vaultImages[assetPath] || null;
 };
 
 // Fetch Content
 const services = await getCollection('services');
 const sortedServices = services.sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
 
+const settingsEntry = await getEntry('pages', 'settings');
+const settings = settingsEntry?.data;
+
+const homeData = await getEntry('pages', 'home');
 const aboutPage = await getEntry('pages', 'about');
 const gettingStartedPage = await getEntry('pages', 'getting-started');
 const contactPage = await getEntry('pages', 'contact');
@@ -37,29 +32,39 @@ const contactPage = await getEntry('pages', 'contact');
 const { Content: AboutContent } = aboutPage ? await render(aboutPage) : { Content: null };
 const { Content: GettingStartedContent } = gettingStartedPage ? await render(gettingStartedPage) : { Content: null };
 const { Content: ContactContent } = contactPage ? await render(contactPage) : { Content: null };
+
+// Resolve Images
+const heroImg = resolveVaultImage(homeData?.data.heroImage);
+const headshotImg = resolveVaultImage(aboutPage?.data.headshotImage);
+const teletherapyImg = resolveVaultImage(homeData?.data.teletherapyImage);
+
+const siteName = settings?.name || SITE_CONFIG.name;
+const formspreeId = settings?.formspreeId || SITE_CONFIG.formspreeId;
 ---
 
-<BaseLayout title={`${SITE_CONFIG.name} | ${SITE_CONFIG.title}`}>
+<BaseLayout title={`${siteName} | ${settings?.professionalTitle || SITE_CONFIG.title}`}>
   <!-- Hero Section -->
   <section id="home" class="relative bg-primary/5 py-24 md:py-48 overflow-hidden">
     <div class="absolute inset-0 z-0">
-      <Image 
-        src={forestImg} 
-        alt="Autumn forest sunlight" 
-        class="w-full h-full object-cover opacity-50"
-      />
+      {heroImg && (
+        <Image 
+          src={heroImg()} 
+          alt={homeData?.data.heroHeadline || "Hero image"} 
+          class="w-full h-full object-cover opacity-50"
+        />
+      )}
     </div>
     <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
       <h1 class="text-4xl md:text-7xl font-montserrat font-bold text-secondary mb-6 leading-tight">
-        A Safe Space for Your Healing Journey
+        {homeData?.data.heroHeadline || "A Safe Space for Your Healing Journey"}
       </h1>
       <p class="text-xl md:text-2xl text-text/80 font-inter mb-10 max-w-2xl mx-auto">
-        Compassionate, evidence-based therapy to help you navigate life's transitions, heal from trauma, and find your center.
+        {homeData?.data.heroSubheadline || "Compassionate, evidence-based therapy to help you navigate life's transitions, heal from trauma, and find your center."}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-all shadow-md">
+        <RequestAppointment class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-all shadow-md">
           Request a Consultation
-        </a>
+        </RequestAppointment>
         <a href="#services" class="inline-block bg-primary/20 text-secondary border border-secondary/20 px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-primary/30 transition-all">
           Explore Services
         </a>
@@ -79,7 +84,7 @@ const { Content: ContactContent } = contactPage ? await render(contactPage) : { 
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sortedServices.map((service) => {
-          const serviceImage = getServiceImage(service.id);
+          const serviceImage = resolveVaultImage(service.data.heroImage);
           return (
             <div class="bg-accent rounded-3xl overflow-hidden shadow-sm border border-primary/20 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col">
               {serviceImage && (
@@ -113,11 +118,13 @@ const { Content: ContactContent } = contactPage ? await render(contactPage) : { 
       <div class="md:w-5/12">
         <div class="relative">
           <div class="absolute -inset-4 bg-primary/20 rounded-3xl -rotate-3 z-0"></div>
-          <Image 
-            src={headshot} 
-            alt={`Dr. ${SITE_CONFIG.name}`} 
-            class="w-full h-auto rounded-3xl relative z-10 shadow-lg"
-          />
+          {headshotImg && (
+            <Image 
+              src={headshotImg()} 
+              alt={`Dr. ${siteName}`} 
+              class="w-full h-auto rounded-3xl relative z-10 shadow-lg"
+            />
+          )}
         </div>
       </div>
       <div class="md:w-7/12">
@@ -133,20 +140,22 @@ const { Content: ContactContent } = contactPage ? await render(contactPage) : { 
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex flex-col md:flex-row-reverse items-center gap-16">
         <div class="md:w-5/12">
-          <Image 
-            src={teletherapyImg} 
-            alt="Teletherapy session" 
-            class="w-full h-auto rounded-3xl shadow-lg"
-          />
+          {teletherapyImg && (
+            <Image 
+              src={teletherapyImg()} 
+              alt="Teletherapy session" 
+              class="w-full h-auto rounded-3xl shadow-lg"
+            />
+          )}
         </div>
         <div class="md:w-7/12">
           <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
             {GettingStartedContent && <GettingStartedContent />}
           </div>
           <div class="mt-10">
-            <a href="#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all">
+            <RequestAppointment class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all">
               Schedule Your Consultation
-            </a>
+            </RequestAppointment>
           </div>
         </div>
       </div>
@@ -165,7 +174,7 @@ const { Content: ContactContent } = contactPage ? await render(contactPage) : { 
       <div class="bg-white/50 p-8 md:p-12 rounded-3xl shadow-sm border border-primary/20">
         <h2 class="text-2xl font-montserrat font-semibold text-secondary mb-8">Consultation Request</h2>
         
-        <form class="space-y-6 font-inter" action={`https://formspree.io/f/${SITE_CONFIG.formspreeId}`} method="POST">
+        <form class="space-y-6 font-inter" action={`https://formspree.io/f/${formspreeId}`} method="POST">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
               <label for="firstName" class="block text-sm font-medium text-text/80">First Name</label>

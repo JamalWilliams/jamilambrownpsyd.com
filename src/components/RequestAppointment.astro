@@ -1,0 +1,22 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a 
+  href="https://jamila-m-brown-psyd.clientsecure.me" 
+  class={`spwidget-button ${className}`} 
+  data-spwidget-scope-id="a6a99036-01e3-4a9f-a77f-af2f2b9274fe" 
+  data-spwidget-scope-uri="jamila-m-brown-psyd" 
+  data-spwidget-application-id="7c72cb9f9a9b913654bb89d6c7b4e71a77911b30192051da35384b4d0c6d505b" 
+  data-spwidget-type="OAR" 
+  data-spwidget-scope-global 
+  data-spwidget-autobind
+>
+  <slot>Request Appointment</slot>
+</a>
+
+<script src="https://widget-cdn.simplepractice.com/assets/integration-1.0.js" is:inline></script>

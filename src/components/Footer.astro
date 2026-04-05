@@ -1,16 +1,23 @@
 ---
 import { SITE_CONFIG } from '../config';
+import RequestAppointment from './RequestAppointment.astro';
 
 const currentYear = new Date().getFullYear();
-const socials = SITE_CONFIG.socials;
+const { settings } = Astro.props;
+const socials = settings?.socials || SITE_CONFIG.socials;
+const name = settings?.name || SITE_CONFIG.name;
+const address = settings?.address || SITE_CONFIG.address;
+const email = settings?.email || SITE_CONFIG.email;
+const phone = settings?.phone || SITE_CONFIG.phone;
+const license = settings?.license || SITE_CONFIG.license;
 ---
 
 <footer class="bg-secondary text-accent py-12 mt-24">
   <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
     <div>
-      <h3 class="font-montserrat font-semibold text-xl mb-4">{SITE_CONFIG.name}</h3>
+      <h3 class="font-montserrat font-semibold text-xl mb-4">{name}</h3>
       <p class="font-inter text-accent/80 leading-relaxed mb-6">
-        Clinical Psychologist providing a warm, safe space for healing and growth in {SITE_CONFIG.address}.
+        Clinical Psychologist providing a warm, safe space for healing and growth in {address}.
       </p>
       <div class="flex flex-col gap-2">
         {socials.map((social) => (
@@ -36,17 +43,17 @@ const socials = SITE_CONFIG.socials;
       <p class="font-inter text-accent/80 mb-4">
         Ready to start? Request a consultation to see if we're a good fit.
       </p>
-      <a href="/#contact" class="inline-block bg-primary text-text px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-accent transition-all">
+      <RequestAppointment class="inline-block bg-primary text-text px-6 py-2 rounded-full font-montserrat font-semibold hover:bg-accent transition-all">
         Contact Me
-      </a>
+      </RequestAppointment>
       <div class="mt-6 font-inter text-accent/60 text-sm">
-        <p>Email: {SITE_CONFIG.email}</p>
-        <p>Phone: {SITE_CONFIG.phone}</p>
+        <p>Email: {email}</p>
+        <p>Phone: {phone}</p>
       </div>
     </div>
   </div>
   <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-accent/10 text-center font-inter text-sm text-accent/40">
-    <p>&copy; {currentYear} {SITE_CONFIG.name}. All rights reserved.</p>
-    <p class="mt-2">{SITE_CONFIG.license}</p>
+    <p>&copy; {currentYear} {name}. All rights reserved.</p>
+    <p class="mt-2">{license}</p>
   </div>
 </footer>
