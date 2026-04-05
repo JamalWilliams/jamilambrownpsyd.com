@@ -30,6 +30,10 @@ jobs:
 
       - name: Build Astro Site
         run: |
+          # Create relative symlink for the build environment (pointing to bundled repo media)
+          mkdir -p src/assets
+          ln -s ../../Vault/Websites/jamilambrownpsyd.com/media src/assets/vault-media
+          
           # Copy Vault media into public/media so Vite can find it (for the CI/CD build)
           mkdir -p public/media
           cp -R Vault/Websites/jamilambrownpsyd.com/media/* public/media/
