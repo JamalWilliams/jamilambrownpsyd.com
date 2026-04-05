@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { SITE_CONFIG } from '../../config';
+import RequestAppointment from '../../components/RequestAppointment.astro';
 
 export async function getStaticPaths() {
   const services = await getCollection('services');
@@ -15,18 +16,32 @@ export async function getStaticPaths() {
 const { service } = Astro.props;
 const { Content } = await render(service);
 
-// Dynamic image import helper
-const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/vault-media/*.{jpeg,jpg,png,gif}');
-const heroImagePath = service.data.heroImage ? `../../assets/vault-media/${service.data.heroImage}` : null;
-const heroImage = heroImagePath ? images[heroImagePath] : null;
+const settingsEntry = await getEntry('pages', 'settings');
+const siteName = settingsEntry?.data?.name || SITE_CONFIG.name;
+
+// Import all images from assets (symlinked from vault)
+const vaultImages = import.meta.glob<{ default: ImageMetadata }>('../../assets/vault-media/*.{jpeg,jpg,png,gif}');
+
+// Helper to resolve vault image paths from frontmatter strings
+const resolveVaultImage = (imagePath: string | undefined) => {
+  if (!imagePath) return null;
+  // Convert "../media/filename.jpg" to "../../assets/vault-media/filename.jpg"
+  const fileName = imagePath.split('/').pop();
+  const assetPath = `../../assets/vault-media/${fileName}`;
+  return vaultImages[assetPath] || null;
+};
+
+const heroImage = resolveVaultImage(service.data.heroImage);
 ---
 
-<BaseLayout title={`${service.data.title} | ${SITE_CONFIG.name}`} description={service.data.description}>
+<BaseLayout title={`${service.data.title} | ${siteName}`} description={service.data.description}>
   <article class="py-20 md:py-32 bg-accent min-h-screen">
     <div class="max-w-4xl mx-auto px-4">
-      <a href="/#services" class="text-primary font-montserrat font-medium hover:text-secondary transition-colors mb-12 inline-flex items-center group">
-        <span class="mr-2 group-hover:-translate-x-1 transition-transform">&larr;</span> Back to Services
-      </a>
+      <nav class="mb-12">
+        <a href="/#services" class="text-primary font-montserrat font-medium hover:text-secondary transition-colors inline-flex items-center group">
+          <span class="mr-2 group-hover:-translate-x-1 transition-transform">&larr;</span> Back to Services
+        </a>
+      </nav>
       
       {heroImage && (
         <div class="mb-12 rounded-3xl overflow-hidden shadow-lg h-64 md:h-96">
@@ -38,10 +53,6 @@ const heroImage = heroImagePath ? images[heroImagePath] : null;
         </div>
       )}
 
-      <h1 class="text-4xl md:text-6xl font-montserrat font-bold text-secondary mb-8">
-        {service.data.title}
-      </h1>
-      
       <div class="prose prose-lg prose-p:font-inter prose-headings:font-montserrat prose-headings:text-secondary prose-a:text-primary hover:prose-a:text-secondary max-w-none text-text/90">
         <Content />
       </div>
@@ -52,9 +63,9 @@ const heroImage = heroImagePath ? images[heroImagePath] : null;
           <p class="font-inter text-text/80 mb-8 text-lg">
             If you feel this service aligns with your needs, I invite you to reach out for a consultation.
           </p>
-          <a href="/#contact" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all shadow-md">
+          <RequestAppointment class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold hover:bg-opacity-90 transition-all shadow-md">
             Request a Consultation
-          </a>
+          </RequestAppointment>
         </div>
       </div>
     </div>
