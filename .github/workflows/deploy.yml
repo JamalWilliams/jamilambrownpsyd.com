@@ -29,7 +29,11 @@ jobs:
         run: npm install
 
       - name: Build Astro Site
-        run: npm run build
+        run: |
+          # Copy Vault media into public/media so Vite can find it (for the CI/CD build)
+          mkdir -p public/media
+          cp -R Vault/Websites/jamilambrownpsyd.com/media/* public/media/
+          npm run build
         env:
           VAULT_CONTENT_PATH: ./Vault/Websites/jamilambrownpsyd.com
 
