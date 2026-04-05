@@ -3,13 +3,18 @@
 
 VAULT_SOURCE="/Users/jamalwilliams/Vault/Websites/jamilambrownpsyd.com"
 VAULT_DEST="./Vault/Websites/jamilambrownpsyd.com"
+MEDIA_DEST="./src/assets/vault-media"
 
-echo "🔄 Syncing Vault content from $VAULT_SOURCE to $VAULT_DEST..."
+echo "🔄 Syncing Vault content..."
 
-# Create destination
+# Create destinations
 mkdir -p "$VAULT_DEST"
+mkdir -p "$MEDIA_DEST"
 
-# Sync (excluding hidden files)
-rsync -av --exclude '.*' "$VAULT_SOURCE/" "$VAULT_DEST/"
+# Sync Text Content
+rsync -av --exclude '.*' --exclude 'media/' "$VAULT_SOURCE/" "$VAULT_DEST/"
+
+# Sync Media Content (directly to assets for build reliability)
+rsync -av --exclude '.*' --exclude 'raw/' "$VAULT_SOURCE/media/" "$MEDIA_DEST/"
 
 echo "✅ Sync complete."
