@@ -15,5 +15,5 @@ Schedule a free 15-minute consultation to discuss your needs and see if we are a
 - **License**: Washington Psychologist License #3705
 
 ## Fees & Insurance
-- **Fees**: $150 per 50-minute session.
+- **Fees**: $175 per 50-minute session.
 - **Insurance**: Some insurance plans accepted. Please contact me for more details.
