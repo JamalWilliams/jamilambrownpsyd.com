@@ -3,10 +3,10 @@ import { glob } from 'astro/loaders';
 import 'dotenv/config';
 import path from 'node:path';
 
-const vaultPath = process.env.VAULT_CONTENT_PATH || '';
+const contentPath = path.resolve('./src/content');
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(vaultPath, 'posts') }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(contentPath, 'posts') }),
 	schema: z.object({
 		title: z.string(),
 		summary: z.string().optional(),
@@ -20,7 +20,7 @@ const posts = defineCollection({
 });
 
 const pages = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(vaultPath, 'pages') }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(contentPath, 'pages') }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string().optional(),
@@ -46,7 +46,7 @@ const pages = defineCollection({
 });
 
 const services = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(vaultPath, 'services') }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(contentPath, 'services') }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
@@ -58,7 +58,7 @@ const services = defineCollection({
 });
 
 const books = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(vaultPath, 'books') }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: path.join(contentPath, 'books') }),
 	schema: z.object({
 		title: z.string(),
 		author: z.string(),

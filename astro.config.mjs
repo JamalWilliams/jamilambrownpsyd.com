@@ -5,15 +5,12 @@ import 'dotenv/config';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://jamilambrownpsyd.com',
   vite: {
     plugins: [tailwindcss()],
     server: {
       fs: {
-        // Allow serving files from the vault directory
-        allow: [
-          '.',
-          process.env.VAULT_CONTENT_PATH || ''
-        ]
+        allow: ['.']
       }
     }
   }

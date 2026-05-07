@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+import { SITE_CONFIG } from '../config';
+
+const entry = await getEntry('pages', '404');
+const settingsEntry = await getEntry('pages', 'settings');
+const settings = settingsEntry?.data;
+
+const title = entry?.data?.title || "Resource Not Found";
+const description = entry?.data?.description || "The path to healing has moved.";
+const siteName = settings?.name || SITE_CONFIG.name;
+---
+
+<BaseLayout title={`${title} | ${siteName}`}>
+  <section class="relative bg-primary/5 py-32 md:py-48 overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+      <span class="text-primary font-montserrat font-bold tracking-widest uppercase mb-4 block">Error 404</span>
+      <h1 class="text-4xl md:text-7xl font-montserrat font-bold text-secondary mb-6 leading-tight">
+        {title}
+      </h1>
+      <p class="text-xl md:text-2xl text-text/80 font-inter mb-10 max-w-2xl mx-auto">
+        {description}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/" class="inline-block bg-secondary text-accent px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-opacity-90 transition-all shadow-md">
+          Return Home
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

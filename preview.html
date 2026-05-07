@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Preview - Jamila M. Brown, PsyD</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @theme {
+            --color-jmb-sage: #7a9a8c;
+            --color-jmb-slate: #475569;
+            --color-jmb-sand: #f1ede4;
+            --color-jmb-charcoal: #334155;
+            --color-jmb-surface: #ffffff;
+            
+            --font-montserrat: "Montserrat", sans-serif;
+            --font-inter: "Inter", sans-serif;
+        }
+        body {
+            @apply bg-jmb-sand text-jmb-slate font-inter;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            @apply font-montserrat font-semibold text-jmb-charcoal;
+        }
+        .btn-affirming {
+            @apply inline-flex items-center justify-center bg-jmb-sage text-white px-10 py-4 font-medium rounded-lg shadow-sm hover:bg-[#6b8a7c] transition-all cursor-pointer no-underline border-none;
+        }
+        .container-safe {
+            @apply bg-jmb-surface border border-jmb-slate/5 p-12 rounded-2xl shadow-sm leading-relaxed;
+        }
+    </style>
+</head>
+<body class="p-8 md:p-16">
+    <header class="mb-16 border-b border-jmb-slate/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+            <div class="text-jmb-sage font-semibold uppercase tracking-widest text-xs mb-4">The Affirming Guide</div>
+            <h1 class="text-4xl md:text-6xl mb-4">Jamila M. Brown, <span class="font-normal opacity-60">PsyD</span></h1>
+            <p class="text-xl opacity-80 max-w-xl">A safe, professional, and warm space for healing and clinical growth.</p>
+        </div>
+        <button class="btn-affirming">Schedule a Consultation</button>
+    </header>
+
+    <section class="mb-16">
+        <h2 class="text-2xl mb-8 uppercase tracking-[0.2rem] opacity-40 font-medium">Color Palette</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+            <div class="space-y-2">
+                <div class="h-24 w-full bg-jmb-sage shadow-sm rounded-lg"></div>
+                <p class="text-sm font-bold">Sage Green</p>
+                <p class="text-xs opacity-60">#7a9a8c</p>
+            </div>
+            <div class="space-y-2">
+                <div class="h-24 w-full bg-jmb-slate shadow-sm rounded-lg"></div>
+                <p class="text-sm font-bold">Slate Blue-Grey</p>
+                <p class="text-xs opacity-60">#475569</p>
+            </div>
+            <div class="space-y-2">
+                <div class="h-24 w-full bg-jmb-sand shadow-sm rounded-lg border border-jmb-slate/5"></div>
+                <p class="text-sm font-bold">Warm Sand</p>
+                <p class="text-xs opacity-60">#f1ede4</p>
+            </div>
+            <div class="space-y-2">
+                <div class="h-24 w-full bg-jmb-charcoal shadow-sm rounded-lg"></div>
+                <p class="text-sm font-bold">Charcoal Heading</p>
+                <p class="text-xs opacity-60">#334155</p>
+            </div>
+            <div class="space-y-2">
+                <div class="h-24 w-full bg-jmb-surface shadow-sm rounded-lg border border-jmb-slate/5"></div>
+                <p class="text-sm font-bold">Clean Surface</p>
+                <p class="text-xs opacity-60">#ffffff</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-16 grid md:grid-cols-2 gap-16">
+        <div>
+            <h2 class="text-2xl mb-8 uppercase tracking-[0.2rem] opacity-40 font-medium">Typography</h2>
+            <div class="space-y-12">
+                <div>
+                    <h3 class="text-6xl font-semibold mb-4 text-jmb-charcoal">Montserrat</h3>
+                    <p class="text-xs opacity-40 mb-6 tracking-widest uppercase">Heading Font</p>
+                    <p class="text-4xl font-medium">Trust and Care</p>
+                    <p class="text-4xl font-normal opacity-60">Approachable Professionalism</p>
+                </div>
+                <div>
+                    <h3 class="text-6xl font-normal mb-4 text-jmb-slate">Inter</h3>
+                    <p class="text-xs opacity-40 mb-6 tracking-widest uppercase">Body Font</p>
+                    <p class="text-xl leading-relaxed opacity-80">
+                        High readability for clinical information and therapeutic guidance. We prioritize clarity to ensure the experience is grounding rather than overwhelming.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h2 class="text-2xl mb-8 uppercase tracking-[0.2rem] opacity-40 font-medium">Safe Elements</h2>
+            <div class="space-y-8">
+                <div class="container-safe">
+                    <h4 class="text-2xl mb-4">A Space to Exhale</h4>
+                    <p class="text-sm opacity-80 leading-relaxed mb-6">Whether navigating professional uncertainty or personal transitions, we provide the containment and clinical insight required for meaningful change.</p>
+                    <div class="flex gap-4">
+                        <span class="inline-block px-3 py-1 bg-jmb-sand rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-jmb-sage">Clinical</span>
+                        <span class="inline-block px-3 py-1 bg-jmb-sand rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-jmb-sage">Empathetic</span>
+                    </div>
+                </div>
+                <div class="p-8 border-2 border-dashed border-jmb-sage/30 rounded-2xl text-center">
+                    <p class="text-sm font-medium italic opacity-60 italic leading-relaxed">"The goal is not just to survive the transition, but to emerge from it with a clearer understanding of your own internal landscape."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-32 pt-8 border-t border-jmb-slate/10 text-center opacity-30 text-xs">
+        &copy; 2026 JAMILA M. BROWN, PSYD. DESIGN MD PREVIEW.
+    </footer>
+</body>
+</html>
